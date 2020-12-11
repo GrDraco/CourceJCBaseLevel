@@ -16,7 +16,9 @@ public class SDKGame {
     public static final String QUESTION_REPEAT = "Повторить игру еще раз?";
     public static final String MESSAGE_YOU_WIN = "Поздравляю Вы победили, УРА УРА УРА !!!";
     public static final String MESSAGE_YOU_LOSE = "Вы проиграли";
-
+    public static final String MESSAGE_DRAW = "Ничья";
+    public static final String MESSAGE_YOUR_TURN = "Ваш ход";
+    public static final String MESSAGE_LOADING = "Думаю ...";
 
     public static Scanner scanner = new Scanner(System.in);
 
@@ -76,6 +78,22 @@ public class SDKGame {
                 return true;
         }
         return false;
+    }
+
+    public static int dialogInt(String message, int min, int max) {
+        int answer = 0;
+        boolean fail = true;
+        do {
+            printText(String.format("%s: ", message), false);
+            if (scanner.hasNextInt()) {
+                answer = scanner.nextInt();
+                fail = !(answer >= min && answer <= max);
+            } else
+                scanner.next();
+            if (fail)
+                printErr(ERROR_INPUT);
+        } while (fail);
+        return answer;
     }
 
     public static String dialog(String[]... menu) {
@@ -161,5 +179,21 @@ public class SDKGame {
 
     public static void printBaseColor() {
         System.out.print("\u001B[34m");
+    }
+
+    public static void printGrid(char[][] grid, boolean viewAxes) {
+        if(grid == null || grid.length == 0)
+            return;
+        SDKGame.printText("# ",false);
+        for (int x = 0; x < grid.length; x++)
+            SDKGame.printText((viewAxes ? (x + 1) : "") + " ", x == grid.length - 1);
+
+        for (int y = 0; y < grid.length; y++) {
+            SDKGame.printText((viewAxes ? (y + 1) : "") + " ", false);
+            for (int x = 0; x < grid.length; x++) {
+                SDKGame.printText(Character.toString(grid[y][x]), false);
+                SDKGame.printText(" ", x == grid.length - 1);
+            }
+        }
     }
 }
